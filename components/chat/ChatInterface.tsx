@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
-import { ChatMessage, Conversation } from '@/types/chat';
+import { ChatMessage } from '@/types/chat';
 
 // Simple JWT utility functions
 const getAuthToken = () => {
