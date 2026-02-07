@@ -4,12 +4,12 @@ import OpenAI from 'openai';
 // Create OpenAI client configured for OpenRouter
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Your OpenRouter API key
-  baseURL: process.env.NEXT_PUBLIC_OPENAI_DOMAIN_KEY, // OpenRouter endpoint
+  baseURL: process.env.OPENAI_DOMAIN_KEY, // OpenRouter endpoint
 });
 
 // Helper function to make authenticated requests to the task API
 async function makeTaskApiRequest(url: string, token: string, options: RequestInit = {}) {
-  const baseUrl = 'http://127.0.0.1:8001/api/v1';
+  const baseUrl = process.env.TASK_API_BASE_URL!;
 
   const response = await fetch(`${baseUrl}${url}`, {
     ...options,
