@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 // Create OpenAI client configured for OpenRouter
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Your OpenRouter API key
-  baseURL: process.env.OPENAI_DOMAIN_KEY, // OpenRouter endpoint
+  baseURL: process.env.NEXT_PUBLIC_OPENAI_DOMAIN_KEY, // OpenRouter endpoint
 });
 
 // Helper function to make authenticated requests to the task API
