@@ -4,30 +4,37 @@
 
 @layer base {
   :root {
-    /* Neon Cyber Theme Colors */
-    --neon-cyan: 51 255 255;
-    --neon-purple: 187 134 252;
-    --neon-pink: 255 20 147;
-    --neon-blue: 0 191 255;
-    --neon-green: 50 255 150;
+    /* Minimal Dark Theme Colors */
+    --primary: 220 14% 71%; /* Light gray for primary text */
+    --secondary: 215 12% 45%; /* Medium gray for secondary text */
+    --accent: 212 100% 45%; /* Blue for interactive elements */
+    --accent-hover: 212 100% 35%; /* Darker blue for hover states */
 
-    /* Glassmorphism variables */
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
+    /* Background colors */
+    --background: 0 0% 100%; /* White background in light mode */
+    --surface: 220 13% 95%; /* Very light gray surface */
+    --card: 0 0% 100%; /* Card background */
+    --border: 217 32% 90%; /* Light gray borders */
 
-    /* Base colors */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Minimal neon alternatives */
+    --minimal-cyan: 64 158 255; /* Subtle blue */
+    --minimal-purple: 144 124 250; /* Muted purple */
   }
 
   .dark {
-    /* Dark theme with neon accents */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    /* Dark theme with minimal accents */
+    --background: 220 15% 8%; /* Deep dark background */
+    --surface: 220 15% 12%; /* Slightly lighter surface */
+    --card: 220 15% 10%; /* Card background */
+    --border: 217 32% 15%; /* Dark gray borders */
+    --primary: 220 14% 94%; /* Light text */
+    --secondary: 215 12% 65%; /* Medium text */
+    --accent: 212 100% 60%; /* Blue accent */
+    --accent-hover: 212 100% 70%; /* Lighter blue for hover */
 
-    /* Glassmorphism in dark mode */
-    --glass-bg: rgba(15, 15, 22, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    /* Minimal neon alternatives */
+    --minimal-cyan: 64 158 255; /* Subtle blue */
+    --minimal-purple: 144 124 250; /* Muted purple */
   }
 }
 

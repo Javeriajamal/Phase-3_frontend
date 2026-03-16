@@ -16,6 +16,18 @@ export default function TasksPage() {
 
   useEffect(() => {
     fetchTasks();
+
+    // Listen for task update events from the chat interface
+    const handleTaskUpdate = () => {
+      fetchTasks();
+    };
+
+    window.addEventListener('taskUpdated', handleTaskUpdate);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('taskUpdated', handleTaskUpdate);
+    };
   }, []);
 
   const fetchTasks = async () => {

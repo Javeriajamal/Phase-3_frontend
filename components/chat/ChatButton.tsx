@@ -165,7 +165,15 @@ const ChatButton: React.FC = () => {
             </button>
           </div>
           <div className="flex-1 overflow-auto p-4">
-            <ChatInterface userId={userId} />
+            <ChatInterface
+              userId={userId}
+              onTaskUpdate={() => {
+                // Dispatch a custom event to notify other parts of the app about task updates
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('taskUpdated'));
+                }
+              }}
+            />
           </div>
         </div>
       </div>

@@ -9,10 +9,7 @@ const openai = new OpenAI({
 
 // Helper function to make authenticated requests to the task API
 async function makeTaskApiRequest(url: string, token: string, options: RequestInit = {}) {
-  const baseUrl = process.env.TASK_API_BASE_URL!;
-
-  console.log("TASK_API_BASE_URL =", baseUrl);
-
+  const baseUrl = 'http://127.0.0.1:8001/api/v1';
 
   const response = await fetch(`${baseUrl}${url}`, {
     ...options,
@@ -24,7 +21,6 @@ async function makeTaskApiRequest(url: string, token: string, options: RequestIn
   });
 
   if (!response.ok) {
-    console.error(await response.text()); // <-- log the actual error
     throw new Error(`Task API request failed: ${response.statusText}`);
   }
 
