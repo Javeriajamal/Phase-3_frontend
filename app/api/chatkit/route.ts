@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         switch (aiAnalysis.intent) {
           case 'add_task':
             if (aiAnalysis.task_details?.title) {
-              await makeTaskApiRequest('/tasks', authToken, {
+              await makeTaskApiRequest('/api/v1/tasks', authToken, {
                 method: 'POST',
                 body: JSON.stringify({
                   title: aiAnalysis.task_details.title,
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
               // If no ID provided, find task by title
               let taskId = aiAnalysis.task_details.id;
               if (!taskId) {
-                const tasksResponse = await makeTaskApiRequest('/tasks', authToken, { method: 'GET' });
+                const tasksResponse = await makeTaskApiRequest('/api/v1/tasks', authToken, { method: 'GET' });
                 if (tasksResponse && tasksResponse.tasks && Array.isArray(tasksResponse.tasks)) {
                   const searchTerm = aiAnalysis.task_details.title.toLowerCase().trim();
                   const matchedTask = tasksResponse.tasks.find((task: any) =>
@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
                   Object.assign(updatePayload, aiAnalysis.task_details.update);
                 }
 
-                await makeTaskApiRequest(`/tasks/${taskId}`, authToken, {
+                await makeTaskApiRequest(`/api/v1/tasks/${taskId}`, authToken, {
                   method: 'PUT',
                   body: JSON.stringify(updatePayload)
                 });
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
               // If no ID provided, find task by title
               let taskId = aiAnalysis.task_details.id;
               if (!taskId) {
-                const tasksResponse = await makeTaskApiRequest('/tasks', authToken, { method: 'GET' });
+                const tasksResponse = await makeTaskApiRequest('/api/v1/tasks', authToken, { method: 'GET' });
                 if (tasksResponse && tasksResponse.tasks && Array.isArray(tasksResponse.tasks)) {
                   const searchTerm = aiAnalysis.task_details.title.toLowerCase().trim();
                   const matchedTask = tasksResponse.tasks.find((task: any) =>
@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
               }
 
               if (taskId) {
-                await makeTaskApiRequest(`/tasks/${taskId}`, authToken, {
+                await makeTaskApiRequest(`/api/v1/tasks/${taskId}`, authToken, {
                   method: 'DELETE'
                 });
                 aiResponse = `I've deleted task ${aiAnalysis.task_details.title || taskId}.`;
@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
               // If no ID provided, find task by title
               let taskId = aiAnalysis.task_details.id;
               if (!taskId) {
-                const tasksResponse = await makeTaskApiRequest('/tasks', authToken, { method: 'GET' });
+                const tasksResponse = await makeTaskApiRequest('/api/v1/tasks', authToken, { method: 'GET' });
                 if (tasksResponse && tasksResponse.tasks && Array.isArray(tasksResponse.tasks)) {
                   const searchTerm = aiAnalysis.task_details.title.toLowerCase().trim();
                   const matchedTask = tasksResponse.tasks.find((task: any) =>
@@ -216,7 +216,7 @@ export async function POST(request: NextRequest) {
               }
 
               if (taskId) {
-                await makeTaskApiRequest(`/tasks/${taskId}/toggle-completion`, authToken, {
+                await makeTaskApiRequest(`/api/v1/tasks/${taskId}/toggle-completion`, authToken, {
                   method: 'PATCH'
                 });
                 aiResponse = `I've marked task ${aiAnalysis.task_details.title || taskId} as complete.`;
@@ -237,7 +237,7 @@ export async function POST(request: NextRequest) {
     else if (authToken && aiAnalysis.intent === 'get_tasks') {
       try {
         // Fetch user's tasks and include them in the response
-        const response = await makeTaskApiRequest('/tasks', authToken, {
+        const response = await makeTaskApiRequest('/api/v1/tasks', authToken, {
           method: 'GET'
         });
         if (response && response.tasks && Array.isArray(response.tasks)) {
