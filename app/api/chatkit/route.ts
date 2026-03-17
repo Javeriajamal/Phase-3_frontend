@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 // Helper function to make authenticated requests to the task API
 async function makeTaskApiRequest(url: string, token: string, options: RequestInit = {}) {
-  const baseUrl = 'http://127.0.0.1:8001/api/v1';
+  const baseUrl = 'https://javeriahere-hackathon-ii-phase-2.hf.space';
 
   const response = await fetch(`${baseUrl}${url}`, {
     ...options,
