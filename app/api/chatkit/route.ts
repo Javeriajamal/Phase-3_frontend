@@ -15,19 +15,29 @@ async function makeTaskApiRequest(url: string, token: string, options: RequestIn
   }
 
   // Construct the base URL, ensuring proper format
-  let baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_CHAT_API_BASE_URL || 'https://javeriahere-hackathon-ii-phase-2.hf.space';
+  let baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_CHAT_API_BASE_URL || 'https://javeriahere-hackathon-ii-phase-3.hf.space';
+
+  // Check if the base URL already includes the API version to prevent duplication
+  const baseUrlHasApiVersion = baseUrl.includes('/api/v1');
+
+  // If base URL already has /api/v1, we should use the path as-is
+  // Otherwise, we need to ensure the path includes the API version
+  let finalPath = url;
+  if (!baseUrlHasApiVersion && !url.startsWith('/api/v1')) {
+    finalPath = `/api/v1${url}`;
+  }
 
   // Ensure the base URL doesn't end with a slash to prevent double slashes in the final URL
   if (baseUrl.endsWith('/')) {
     baseUrl = baseUrl.slice(0, -1);
   }
 
-  // Ensure the URL starts with a slash
-  if (!url.startsWith('/')) {
-    url = '/' + url;
+  // Ensure the path starts with a slash
+  if (!finalPath.startsWith('/')) {
+    finalPath = '/' + finalPath;
   }
 
-  const fullUrl = `${baseUrl}${url}`;
+  const fullUrl = `${baseUrl}${finalPath}`;
 
   console.log(`Making request to: ${fullUrl}`); // Debug log
   console.log(`Using token: ${token ? '***REDACTED***' : 'NULL'}`); // Debug log
