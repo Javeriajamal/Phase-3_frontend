@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 // Helper function to make authenticated requests to the task API
 async function makeTaskApiRequest(url: string, token: string, options: RequestInit = {}) {
-  const baseUrl = 'https://javeriahere-hackathon-ii-phase-2.hf.space';
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_CHAT_API_BASE_URL || 'https://javeriahere-hackathon-ii-phase-2.hf.space';
 
   const response = await fetch(`${baseUrl}${url}`, {
     ...options,
@@ -21,7 +21,9 @@ async function makeTaskApiRequest(url: string, token: string, options: RequestIn
   });
 
   if (!response.ok) {
-    throw new Error(`Task API request failed: ${response.statusText}`);
+    // Include status text in error for better debugging
+    const errorMessage = response.status === 401 ? 'Unauthorized' : response.statusText;
+    throw new Error(`Task API request failed: ${errorMessage}`);
   }
 
   return response.json();
