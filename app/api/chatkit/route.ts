@@ -9,21 +9,57 @@ const openai = new OpenAI({
 
 // Helper function to make authenticated requests to the task API
 async function makeTaskApiRequest(url: string, token: string, options: RequestInit = {}) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_CHAT_API_BASE_URL || 'https://javeriahere-hackathon-ii-phase-2.hf.space';
+  // Validate token before making request
+  if (!token) {
+    throw new Error('No authentication token provided for task API request');
+  }
 
-  const response = await fetch(`${baseUrl}${url}`, {
+  // Construct the base URL, ensuring proper format
+  let baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_CHAT_API_BASE_URL || 'https://javeriahere-hackathon-ii-phase-2.hf.space';
+
+  // Ensure the base URL doesn't end with a slash to prevent double slashes in the final URL
+  if (baseUrl.endsWith('/')) {
+    baseUrl = baseUrl.slice(0, -1);
+  }
+
+  // Ensure the URL starts with a slash
+  if (!url.startsWith('/')) {
+    url = '/' + url;
+  }
+
+  const fullUrl = `${baseUrl}${url}`;
+
+  console.log(`Making request to: ${fullUrl}`); // Debug log
+  console.log(`Using token: ${token ? '***REDACTED***' : 'NULL'}`); // Debug log
+
+  const response = await fetch(fullUrl, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
+      'User-Agent': 'NextJS-Vercel-Client/1.0', // Identify the client for potential backend logging
       ...options.headers,
     },
   });
 
+  console.log(`Response status: ${response.status}`); // Debug log
+
   if (!response.ok) {
     // Include status text in error for better debugging
     const errorMessage = response.status === 401 ? 'Unauthorized' : response.statusText;
-    throw new Error(`Task API request failed: ${errorMessage}`);
+    console.error(`Task API request failed: Status ${response.status}, URL: ${fullUrl}, Token provided: ${!!token}`);
+
+    // Try to get more details from the response if possible
+    let errorDetails = '';
+    try {
+      const errorBody = await response.text();
+      errorDetails = errorBody;
+      console.error(`Error response body: ${errorBody}`);
+    } catch (e) {
+      console.error(`Could not read error response body: ${e}`);
+    }
+
+    throw new Error(`Task API request failed: ${errorMessage}. Details: ${errorDetails}`);
   }
 
   return response.json();
@@ -79,7 +115,8 @@ export async function POST(request: NextRequest) {
     let taskOperation = '';
 
     // Perform the actual task operation based on the AI's analysis
-    if (authToken && aiAnalysis.intent !== 'other' && aiAnalysis.intent !== 'get_tasks') {
+    // Also validate that the token is not just present but appears to be a valid JWT
+    if (authToken && typeof authToken === 'string' && authToken.split('.').length === 3 && aiAnalysis.intent !== 'other' && aiAnalysis.intent !== 'get_tasks') {
       try {
         switch (aiAnalysis.intent) {
           case 'add_task':
@@ -236,7 +273,7 @@ export async function POST(request: NextRequest) {
       }
     }
     // For get_tasks intent, we don't perform an operation but let the AI handle the response
-    else if (authToken && aiAnalysis.intent === 'get_tasks') {
+    else if (authToken && typeof authToken === 'string' && authToken.split('.').length === 3 && aiAnalysis.intent === 'get_tasks') {
       try {
         // Fetch user's tasks and include them in the response
         const response = await makeTaskApiRequest('/api/v1/tasks', authToken, {
